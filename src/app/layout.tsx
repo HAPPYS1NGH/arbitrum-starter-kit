@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "@rainbow-me/rainbowkit/styles.css"
 import "./globals.css"
-import Web3Provider from "@/providers/Providers"
-import Navbar from "@/components/shared/Navbar"
+import Web3Provider from "@/providers/Web3Provider"
+import Layout from "@/providers/Layout"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,8 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Web3Provider>
-          <Navbar />
-          <main className="mx-12 my-8 ">{children}</main>
+          <Layout>{children}</Layout>
         </Web3Provider>
       </body>
     </html>
