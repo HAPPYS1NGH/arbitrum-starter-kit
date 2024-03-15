@@ -1,8 +1,10 @@
 "use client"
 import * as React from "react"
+import { useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi"
+import { toast } from "sonner"
 
 export function WriteContract() {
   const { data: hash, isPending, writeContract } = useWriteContract()
@@ -49,10 +51,22 @@ export function WriteContract() {
     })
   }
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    })
+  const {
+    isLoading: isConfirming,
+    error,
+    isSuccess: isConfirmed,
+  } = useWaitForTransactionReceipt({
+    hash,
+  })
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast.success("Transaction Successful")
+    }
+    if (error) {
+      toast.error("Transaction Failed")
+    }
+  }, [isConfirmed, error])
 
   return (
     <form onSubmit={submit}>
@@ -62,9 +76,6 @@ export function WriteContract() {
           {isPending ? "Confirming..." : "Mint"}
         </Button>
       </div>
-      {hash && <div>Transaction Hash: {hash}</div>}
-      {isConfirming && <div>Waiting for confirmation...</div>}
-      {isConfirmed && <div>Transaction confirmed.</div>}
     </form>
   )
 }
